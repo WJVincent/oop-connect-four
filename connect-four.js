@@ -1,21 +1,43 @@
-import Game from './game.js';
+import Game from "./game.js";
 
-const game = undefined;
+let game = undefined;
+const gameBoard = document.getElementById("board-holder");
+const playArea = document.getElementById("click-targets");
 
-window.addEventListener("DOMContentLoaded", e => {
-    const P1 = document.getElementById("player-1-name");
-    const P2 = document.getElementById("player-2-name");
-    const newGameButton = document.getElementById("new-game");
-    let curr = P1
+const updateUI = () => {
+  let currentPlayer = game.currentPlayer;
+  game === undefined
+    ? gameBoard.setAttribute("class", "is-invisible")
+    : (gameBoard.removeAttribute("class"),
+      (document.getElementById("game-name").innerHTML = game.getName()));
+  currentPlayer === 1
+    ? (playArea.classList.remove("black"), playArea.classList.add("red"))
+    : (playArea.classList.remove("red"), playArea.classList.add("black"));
+};
 
-    console.log(curr)
+window.addEventListener("DOMContentLoaded", () => {
+  const P1 = document.getElementById("player-1-name");
+  const P2 = document.getElementById("player-2-name");
+  const newGameButton = document.getElementById("new-game");
 
-    curr.addEventListener("keyup", e => {
-        if(P1.text !== "" && P2.text !== ""){
-        newGameButton.setAttribute("disabled", false);
-        } else {
-            newGameButton.setAttribute("disabled", true);
-        }
-    })
+  const disableNewGameButton = () => {
+    newGameButton.disabled = P1.value === "" && P2.value === "" ? true : false;
+  };
 
-})
+  P1.addEventListener("keyup", disableNewGameButton);
+
+  P2.addEventListener("keyup", disableNewGameButton);
+
+  newGameButton.addEventListener("click", () => {
+    game = new Game(P1.value, P2.value);
+    P1.value = "";
+    P2.value = "";
+    newGameButton.disabled = true;
+    updateUI();
+  });
+
+  playArea.addEventListener("click", (event) => {
+    game.playInColumn();
+    updateUI();
+  });
+});
