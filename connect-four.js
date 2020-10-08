@@ -37,7 +37,10 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   playArea.addEventListener("click", (event) => {
-    game.playInColumn();
+    element = event.target;
+    if(!element.id.startsWith("column-")) return;
+    columnIndex = Number.parseInt(element.id[element.id-1])
+    game.playInColumn(columnIndex);
     updateUI();
   });
 });
