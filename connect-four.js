@@ -8,8 +8,8 @@ const checkAllSquares = () => {
   for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 7; col++) {
       let selectSquare = document.getElementById(`square-${row}-${col}`);
-      let checkSquare = game.getTokenAt(col, row);
       selectSquare.innerHTML = "";
+      let checkSquare = game.getTokenAt(col, row);
       if (checkSquare === 1) {
         let tempDiv = document.createElement("div");
         tempDiv.classList.add("token", "black");
