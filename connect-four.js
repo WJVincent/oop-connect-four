@@ -1,5 +1,24 @@
 import Game from "./game.js";
 
+let checkAllSquares = function(){
+    for (let row = 0; row < 6; row++){
+    for (let col = 0; col < 7; col++){
+        let selectSquare = document.getElementById(`square-${row}-${col}`)
+        let checkSquare = game.getTokenAt(col, row)
+        selectSquare.innerHTML=''
+        if (checkSquare===1){
+            let tempDiv = document.createElement('div')
+            tempDiv.classList.add('token', 'black')
+            selectSquare.appendChild(tempDiv)
+        } else if (checkSquare===2){
+            let tempDiv = document.createElement('div')
+            tempDiv.classList.add('token', 'red')
+            selectSquare.appendChild(tempDiv)
+        }
+    }
+    }
+}
+
 let game = undefined;
 const gameBoard = document.getElementById("board-holder");
 const playArea = document.getElementById("click-targets");
@@ -13,6 +32,7 @@ const updateUI = () => {
   currentPlayer === 1
     ? (playArea.classList.remove("black"), playArea.classList.add("red"))
     : (playArea.classList.remove("red"), playArea.classList.add("black"));
+    checkAllSquares();
 };
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -37,9 +57,9 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   playArea.addEventListener("click", (event) => {
-    element = event.target;
+    let element = event.target;
     if(!element.id.startsWith("column-")) return;
-    columnIndex = Number.parseInt(element.id[element.id-1])
+    let columnIndex = Number.parseInt(element.id[element.id.length-1])
     game.playInColumn(columnIndex);
     updateUI();
   });

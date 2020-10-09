@@ -1,4 +1,4 @@
-import Column from 'column.js'
+import Column from './column.js'
 export default class Game {
   constructor(player1, player2) {
     this.player1 = player1;
@@ -24,6 +24,6 @@ export default class Game {
       : (this.currentPlayer = 1);
   }
   getTokenAt(colIdx, rowIdx){
-      return this.columns[colIdx].getTokenAt(rowIdx);
+      return this.columns[colIdx].getIndexAt(rowIdx);
   }
 }

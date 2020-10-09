@@ -1,5 +1,3 @@
-import Game from "./game";
-
 export default class Column{
     constructor(){
         this.colArr = [null, null, null, null, null, null]
@@ -9,10 +7,15 @@ export default class Column{
             let currPos = this.colArr[i];
             if (currPos = null){
                 currPos = currentPlayer;
+            } else {
+                this.isFull()
             }
         }
     }
-    getTokenAt(index){
+    isFull(){
+        if (this.colArr.includes(null) !== false) return true;
+    }
+    getIndexAt(index){
         return this.colArr[index]
     }
 }
