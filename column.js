@@ -5,7 +5,7 @@ export default class Column {
   add(currentPlayer) {
     for (let i = this.colArr.length - 1; i >= 0; i--) {
       let currPos = this.colArr[i];
-      if ((currPos = null)) {
+      if (currPos === null) {
         currPos = currentPlayer;
       } else {
         this.isFull();
