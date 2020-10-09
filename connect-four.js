@@ -25,7 +25,6 @@ const checkAllSquares = () => {
 };
 
 const revealBoard = () => {
-  console.log(game.getName());
   game === undefined
     ? gameBoard.classList.add("is-invisible")
     : (gameBoard.classList.remove("is-invisible"),
