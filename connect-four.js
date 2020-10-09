@@ -27,7 +27,9 @@ const revealBoard = () => {
   game === undefined
     ? gameBoard.setAttribute("class", "is-invisible")
     : (gameBoard.removeAttribute("class"),
-      (document.getElementById("game-name").innerHTML = game.getName()));
+      (document.getElementById(
+        "game-name"
+      ).innerHTML = `<h1>${game.getName()}</h1>`));
 };
 
 const changePlayerColor = () => {
