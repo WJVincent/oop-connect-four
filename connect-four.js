@@ -31,13 +31,13 @@ const revealBoard = () => {
 };
 
 const changePlayerColor = () => {
+  let currentPlayer = game.currentPlayer;
   currentPlayer === 1
     ? (playArea.classList.remove("black"), playArea.classList.add("red"))
     : (playArea.classList.remove("red"), playArea.classList.add("black"));
 };
 
 const updateUI = () => {
-  let currentPlayer = game.currentPlayer;
   revealBoard();
   checkAllSquares();
   changePlayerColor();
