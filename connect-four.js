@@ -19,13 +19,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const P1 = document.getElementById("player-1-name");
   const P2 = document.getElementById("player-2-name");
   const newGameButton = document.getElementById("new-game");
-
   const disableNewGameButton = () => {
     newGameButton.disabled = P1.value === "" && P2.value === "" ? true : false;
   };
 
   P1.addEventListener("keyup", disableNewGameButton);
-
   P2.addEventListener("keyup", disableNewGameButton);
 
   newGameButton.addEventListener("click", () => {
@@ -38,8 +36,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   playArea.addEventListener("click", (event) => {
     element = event.target;
-    if(!element.id.startsWith("column-")) return;
-    columnIndex = Number.parseInt(element.id[element.id-1])
+    if (!element.id.startsWith("column-")) return;
+    columnIndex = Number.parseInt(element.id[element.id - 1]);
     game.playInColumn(columnIndex);
     updateUI();
   });

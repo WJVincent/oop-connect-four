@@ -1,16 +1,19 @@
-import Column from 'column.js'
+import Column from "column.js";
+
 export default class Game {
   constructor(player1, player2) {
     this.player1 = player1;
     this.player2 = player2;
     this.currentPlayer = 1;
-    this.columns = [new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column(),
-                    new Column()]
+    this.columns = [
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+      new Column(),
+    ];
   }
 
   getName() {
@@ -18,12 +21,13 @@ export default class Game {
   }
 
   playInColumn(columnIndex) {
-    this.columns[columnIndex].add(this.currentPlayer)
+    this.columns[columnIndex].add(this.currentPlayer);
     this.currentPlayer === 1
       ? (this.currentPlayer = 2)
       : (this.currentPlayer = 1);
   }
-  getTokenAt(colIdx, rowIdx){
-      return this.columns[colIdx].getTokenAt(rowIdx);
+
+  getTokenAt(columnIndex, rowIndex) {
+    return this.columns[columnIndex].getTokenAt(rowIndex);
   }
 }
