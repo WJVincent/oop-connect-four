@@ -10,6 +10,7 @@ const checkAllSquares = () => {
       let selectSquare = document.getElementById(`square-${row}-${col}`);
       selectSquare.innerHTML = "";
       let checkSquare = game.getTokenAt(col, row);
+
       if (checkSquare === 1) {
         let tempDiv = document.createElement("div");
         tempDiv.classList.add("token", "red");
@@ -24,9 +25,10 @@ const checkAllSquares = () => {
 };
 
 const revealBoard = () => {
+  console.log(game.getName());
   game === undefined
-    ? gameBoard.setAttribute("class", "is-invisible")
-    : (gameBoard.removeAttribute("class"),
+    ? gameBoard.classList.add("is-invisible")
+    : (gameBoard.classList.remove("is-invisible"),
       (document.getElementById(
         "game-name"
       ).innerHTML = `<h1>${game.getName()}</h1>`));
@@ -42,16 +44,17 @@ const changePlayerColor = () => {
 const updateUI = (index) => {
   let invalidMove = false;
   game.checkForWinConditions();
+
   if (index === undefined || game.winnerNumber !== 0) {
     checkAllSquares();
     revealBoard();
   } else {
     checkAllSquares();
     invalidMove = game.isColumnFull(index);
+
     if (!invalidMove) {
       changePlayerColor();
-    }
-    if (invalidMove) {
+    } else if (invalidMove) {
       let curColumn = document.getElementById(`column-${index}`);
       curColumn.classList.add("full");
     }
@@ -74,14 +77,17 @@ window.addEventListener("DOMContentLoaded", () => {
     P1.value = "";
     P2.value = "";
     newGameButton.disabled = true;
+
     updateUI();
   });
 
   playArea.addEventListener("click", (event) => {
     if (game.winnerNumber !== 0) return;
+
     let element = event.target.id;
     if (!element.startsWith("column-")) return;
     let columnIndex = Number.parseInt(element[element.length - 1]);
+
     game.playInColumn(columnIndex);
     updateUI(columnIndex);
   });

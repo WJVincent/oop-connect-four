@@ -21,15 +21,13 @@ export default class Game {
   }
 
   getName() {
-    if (this.winnerNumber === 3) {
-      return `${this.player1} ties with ${this.player2}`;
-    } else if (this.winnerNumber === 2) {
-      return `${this.player2} Wins!`;
-    } else if (this.winnerNumber === 1) {
-      return `${this.player1} Wins!`;
-    } else {
-      return `${this.player1} vs. ${this.player2}`;
-    }
+    return this.winnerNumber === 3
+      ? `${this.player1} ties with ${this.player2}`
+      : this.winnerNumber === 2
+      ? `${this.player2} Wins!`
+      : this.winnerNumber === 1
+      ? `${this.player1} Wins!`
+      : `${this.player1} vs. ${this.player2}`;
   }
 
   playInColumn(columnIndex) {
@@ -72,21 +70,15 @@ export default class Game {
     let rows3 = new RowWinInspector(group3);
     let rows4 = new RowWinInspector(group4);
 
-    if (rows1.inspect()) {
-      this.winnerNumber = rows1.inspect();
-    }
-
-    if (rows2.inspect()) {
-      this.winnerNumber = rows2.inspect();
-    }
-
-    if (rows3.inspect()) {
-      this.winnerNumber = rows3.inspect();
-    }
-
-    if (rows4.inspect()) {
-      this.winnerNumber = rows4.inspect();
-    }
+    rows1.inspect()
+      ? (this.winnerNumber = rows1.inspect())
+      : rows2.inspect()
+      ? (this.winnerNumber = rows2.inspect())
+      : rows3.inspect()
+      ? (this.winnerNumber = rows3.inspect())
+      : rows4.inspect()
+      ? (this.winnerNumber = rows4.inspect())
+      : (this.winnerNumber = this.winnerNumber);
   }
 
   checkForDiagonalWin() {
@@ -95,26 +87,20 @@ export default class Game {
     let group3 = this.columns.slice(2, 6);
     let group4 = this.columns.slice(3, 7);
 
-    let rows1 = new DiagonalWinInspector(group1);
-    let rows2 = new DiagonalWinInspector(group2);
-    let rows3 = new DiagonalWinInspector(group3);
-    let rows4 = new DiagonalWinInspector(group4);
+    let diagonals1 = new DiagonalWinInspector(group1);
+    let diagonals2 = new DiagonalWinInspector(group2);
+    let diagonals3 = new DiagonalWinInspector(group3);
+    let diagonals4 = new DiagonalWinInspector(group4);
 
-    if (rows1.inspect()) {
-      this.winnerNumber = rows1.inspect();
-    }
-
-    if (rows2.inspect()) {
-      this.winnerNumber = rows2.inspect();
-    }
-
-    if (rows3.inspect()) {
-      this.winnerNumber = rows3.inspect();
-    }
-
-    if (rows4.inspect()) {
-      this.winnerNumber = rows4.inspect();
-    }
+    diagonals1.inspect()
+      ? (this.winnerNumber = diagonals1.inspect())
+      : diagonals2.inspect()
+      ? (this.winnerNumber = diagonals2.inspect())
+      : diagonals3.inspect()
+      ? (this.winnerNumber = diagonals3.inspect())
+      : diagonals4.inspect()
+      ? (this.winnerNumber = diagonals4.inspect())
+      : (this.winnerNumber = this.winnerNumber);
   }
 
   checkForWinConditions() {
