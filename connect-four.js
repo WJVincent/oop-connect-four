@@ -40,6 +40,12 @@ const changePlayerColor = () => {
     : (playArea.classList.remove("red"), playArea.classList.add("black"));
 };
 
+const handlePlayerMove = (index, invalidMove) => {
+  !invalidMove
+    ? changePlayerColor()
+    : document.getElementById(`column-${index}`).classList.add("full");
+};
+
 const updateUI = (index) => {
   let invalidMove = false;
   game.checkForWinConditions();
@@ -50,13 +56,7 @@ const updateUI = (index) => {
   } else {
     checkAllSquares();
     invalidMove = game.isColumnFull(index);
-
-    if (!invalidMove) {
-      changePlayerColor();
-    } else if (invalidMove) {
-      let curColumn = document.getElementById(`column-${index}`);
-      curColumn.classList.add("full");
-    }
+    handlePlayerMove(index, invalidMove);
   }
 };
 

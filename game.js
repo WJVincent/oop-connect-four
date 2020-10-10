@@ -11,6 +11,7 @@ export default class Game {
     this.winnerNumber = 0;
     this.columns = Array.from(new Array(7), () => new Column());
   }
+
   getName() {
     return this.winnerNumber === 3
       ? `${this.player1} ties with ${this.player2}`
@@ -43,7 +44,6 @@ export default class Game {
     this.columns.forEach((ele) => {
       let checkedArray = new ColumnWinInspector(ele.tokenArr);
       let value = checkedArray.inspect();
-      console.log(value);
       if (value !== undefined) {
         this.winnerNumber = value;
       }
