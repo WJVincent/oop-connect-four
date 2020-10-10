@@ -49,15 +49,11 @@ const handlePlayerMove = (index, invalidMove) => {
 const updateUI = (index) => {
   let invalidMove = false;
   game.checkForWinConditions();
-
-  if (index === undefined || game.winnerNumber !== 0) {
-    checkAllSquares();
-    revealBoard();
-  } else {
-    checkAllSquares();
-    invalidMove = game.isColumnFull(index);
-    handlePlayerMove(index, invalidMove);
-  }
+  checkAllSquares();
+  index === undefined || game.winnerNumber !== 0
+    ? revealBoard()
+    : ((invalidMove = game.isColumnFull(index)),
+      handlePlayerMove(index, invalidMove));
 };
 
 window.addEventListener("DOMContentLoaded", () => {
