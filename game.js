@@ -9,17 +9,8 @@ export default class Game {
     this.player2 = player2;
     this.currentPlayer = 1;
     this.winnerNumber = 0;
-    this.columns = [
-      new Column(),
-      new Column(),
-      new Column(),
-      new Column(),
-      new Column(),
-      new Column(),
-      new Column(),
-    ];
+    this.columns = Array.from(new Array(7), () => new Column());
   }
-
   getName() {
     return this.winnerNumber === 3
       ? `${this.player1} ties with ${this.player2}`
@@ -59,16 +50,16 @@ export default class Game {
     });
   }
 
-  checkForRowWin() {
-    let group1 = this.columns.slice(0, 4);
-    let group2 = this.columns.slice(1, 5);
-    let group3 = this.columns.slice(2, 6);
-    let group4 = this.columns.slice(3, 7);
+  createColumnGroup(start, end, className) {
+    let group = this.columns.slice(start, end);
+    return new className(group);
+  }
 
-    let rows1 = new RowWinInspector(group1);
-    let rows2 = new RowWinInspector(group2);
-    let rows3 = new RowWinInspector(group3);
-    let rows4 = new RowWinInspector(group4);
+  checkForRowWin() {
+    let rows1 = this.createColumnGroup(0, 4, RowWinInspector);
+    let rows2 = this.createColumnGroup(1, 5, RowWinInspector);
+    let rows3 = this.createColumnGroup(2, 6, RowWinInspector);
+    let rows4 = this.createColumnGroup(3, 7, RowWinInspector);
 
     rows1.inspect()
       ? (this.winnerNumber = rows1.inspect())
@@ -82,15 +73,10 @@ export default class Game {
   }
 
   checkForDiagonalWin() {
-    let group1 = this.columns.slice(0, 4);
-    let group2 = this.columns.slice(1, 5);
-    let group3 = this.columns.slice(2, 6);
-    let group4 = this.columns.slice(3, 7);
-
-    let diagonals1 = new DiagonalWinInspector(group1);
-    let diagonals2 = new DiagonalWinInspector(group2);
-    let diagonals3 = new DiagonalWinInspector(group3);
-    let diagonals4 = new DiagonalWinInspector(group4);
+    let diagonals1 = this.createColumnGroup(0, 4, DiagonalWinInspector);
+    let diagonals2 = this.createColumnGroup(1, 5, DiagonalWinInspector);
+    let diagonals3 = this.createColumnGroup(2, 6, DiagonalWinInspector);
+    let diagonals4 = this.createColumnGroup(3, 7, DiagonalWinInspector);
 
     diagonals1.inspect()
       ? (this.winnerNumber = diagonals1.inspect())
