@@ -70,40 +70,26 @@ export default class Game {
   function. If any of the groups of rows return a truthy value, set
   the winner number to that value. */
   checkForRowWin() {
-    let rows1 = this.createColumnGroup(0, 4, RowWinInspector);
-    let rows2 = this.createColumnGroup(1, 5, RowWinInspector);
-    let rows3 = this.createColumnGroup(2, 6, RowWinInspector);
-    let rows4 = this.createColumnGroup(3, 7, RowWinInspector);
-
-    rows1.inspect()
-      ? (this.winnerNumber = rows1.inspect())
-      : rows2.inspect()
-      ? (this.winnerNumber = rows2.inspect())
-      : rows3.inspect()
-      ? (this.winnerNumber = rows3.inspect())
-      : rows4.inspect()
-      ? (this.winnerNumber = rows4.inspect())
-      : (this.winnerNumber = this.winnerNumber);
+    const startNums = [0, 1, 2, 3];
+    startNums.forEach((ele) => {
+      let group = this.createColumnGroup(ele, ele + 4, RowWinInspector);
+      if (group.inspect()) {
+        this.winnerNumber = group.inspect();
+      }
+    });
   }
 
   /*Create the groups to inspect the diagonals of the board with the helper
   function. If any of the groups of diagonals return a truthy value, set
   the winner number to that value.  */
   checkForDiagonalWin() {
-    let diagonals1 = this.createColumnGroup(0, 4, DiagonalWinInspector);
-    let diagonals2 = this.createColumnGroup(1, 5, DiagonalWinInspector);
-    let diagonals3 = this.createColumnGroup(2, 6, DiagonalWinInspector);
-    let diagonals4 = this.createColumnGroup(3, 7, DiagonalWinInspector);
-
-    diagonals1.inspect()
-      ? (this.winnerNumber = diagonals1.inspect())
-      : diagonals2.inspect()
-      ? (this.winnerNumber = diagonals2.inspect())
-      : diagonals3.inspect()
-      ? (this.winnerNumber = diagonals3.inspect())
-      : diagonals4.inspect()
-      ? (this.winnerNumber = diagonals4.inspect())
-      : (this.winnerNumber = this.winnerNumber);
+    const startNums = [0, 1, 2, 3];
+    startNums.forEach((ele) => {
+      let group = this.createColumnGroup(ele, ele + 4, DiagonalWinInspector);
+      if (group.inspect()) {
+        this.winnerNumber = group.inspect();
+      }
+    });
   }
 
   /*Run all methods that check for win/tie conditions */
