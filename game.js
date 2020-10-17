@@ -15,13 +15,16 @@ export default class Game {
   /*Check the value of winner number and return an template string based on the value
   of winner number */
   getName() {
-    return this.winnerNumber === 3
-      ? `${this.player1} ties with ${this.player2}`
-      : this.winnerNumber === 2
-      ? `${this.player2} Wins!`
-      : this.winnerNumber === 1
-      ? `${this.player1} Wins!`
-      : `${this.player1} vs. ${this.player2}`;
+    switch (this.winnerNumber) {
+      case 0:
+        return `${this.player1} vs. ${this.player2}`;
+      case 1:
+        return `${this.player1} Wins!`;
+      case 2:
+        return `${this.player2} Wins!`;
+      case 3:
+        return `${this.player1} ties with ${this.player2}`;
+    }
   }
 
   /*If the instance of column in the columns array is not full, then call the add
@@ -38,12 +41,9 @@ export default class Game {
   /*Check each of the column instances in the columns array, to see if there are
   any more playable locations. */
   checkForTie() {
-    for (let index = 0; index < this.columns.length; index++) {
-      if (!this.columns[index].isFull()) {
-        return;
-      }
+    if (this.columns.every((column) => column.isFull())) {
+      return (this.winnerNumber = 3);
     }
-    return (this.winnerNumber = 3);
   }
 
   /*For each of the column instances make a win inspector and run the inspect
@@ -52,16 +52,15 @@ export default class Game {
   checkForColumnWin() {
     this.columns.forEach((ele) => {
       let checkedArray = new ColumnWinInspector(ele.tokenArr);
-      let value = checkedArray.inspect();
-      if (value !== undefined) {
-        this.winnerNumber = value;
+      if (checkedArray.inspect()) {
+        this.winnerNumber = checkedArray.inspect();
       }
     });
   }
 
   /*Helper function to create a new instance of a win inspector for
   a set group of columns*/
-  createColumnGroup(start, end, className) {
+  createGroup(start, end, className) {
     let group = this.columns.slice(start, end);
     return new className(group);
   }
@@ -69,25 +68,15 @@ export default class Game {
   /*Create the groups to inspect the rows of the board with the helper
   function. If any of the groups of rows return a truthy value, set
   the winner number to that value. */
-  checkForRowWin() {
+  checkForRowAndDiagonalWin() {
     const startNums = [0, 1, 2, 3];
     startNums.forEach((ele) => {
-      let group = this.createColumnGroup(ele, ele + 4, RowWinInspector);
-      if (group.inspect()) {
-        this.winnerNumber = group.inspect();
-      }
-    });
-  }
-
-  /*Create the groups to inspect the diagonals of the board with the helper
-  function. If any of the groups of diagonals return a truthy value, set
-  the winner number to that value.  */
-  checkForDiagonalWin() {
-    const startNums = [0, 1, 2, 3];
-    startNums.forEach((ele) => {
-      let group = this.createColumnGroup(ele, ele + 4, DiagonalWinInspector);
-      if (group.inspect()) {
-        this.winnerNumber = group.inspect();
+      let rowGroup = this.createGroup(ele, ele + 4, RowWinInspector);
+      let diagonalGroup = this.createGroup(ele, ele + 4, DiagonalWinInspector);
+      if (rowGroup.inspect()) {
+        this.winnerNumber = rowGroup.inspect();
+      } else if (diagonalGroup.inspect()) {
+        this.winnerNumber = diagonalGroup.inspect();
       }
     });
   }
@@ -96,8 +85,7 @@ export default class Game {
   checkForWinConditions() {
     this.checkForTie();
     this.checkForColumnWin();
-    this.checkForRowWin();
-    this.checkForDiagonalWin();
+    this.checkForRowAndDiagonalWin();
   }
 
   /*Check the value of the column instance, at a specific index of that instances

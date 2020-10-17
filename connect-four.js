@@ -3,6 +3,7 @@ import Game from "./game.js";
 let game = undefined;
 const gameBoard = document.getElementById("board-holder");
 const playArea = document.getElementById("click-targets");
+const textArea = document.getElementById("game-name");
 
 /*Check the values for every location on the board. If there is a player value
 in that location put the corresponding token into that location. */
@@ -32,9 +33,7 @@ const revealBoard = () => {
   game === undefined
     ? gameBoard.classList.add("is-invisible")
     : (gameBoard.classList.remove("is-invisible"),
-      (document.getElementById(
-        "game-name"
-      ).innerHTML = `<h1>${game.getName()}</h1>`));
+      (textArea.innerHTML = `<h1>${game.getName()}</h1>`));
 };
 
 /*Set the token color to correspond to the current player */
@@ -77,8 +76,8 @@ window.addEventListener("DOMContentLoaded", () => {
     newGameButton.disabled = P1.value === "" && P2.value === "" ? true : false;
   };
 
-  P1.addEventListener("keyup", disableNewGameButton);
-  P2.addEventListener("keyup", disableNewGameButton);
+  P1.addEventListener("keyup", () => disableNewGameButton());
+  P2.addEventListener("keyup", () => disableNewGameButton());
 
   /*When the new game button is clicked created a game instance, reset the values
   of the player 1 and player 2 input fields and disable the new game button */
