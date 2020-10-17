@@ -36,6 +36,7 @@ export default class Game {
         ? (this.currentPlayer = 2)
         : (this.currentPlayer = 1);
     }
+    this.checkForWinConditions();
   }
 
   /*Check each of the column instances in the columns array, to see if there are
@@ -65,8 +66,8 @@ export default class Game {
     return new className(group);
   }
 
-  /*Create the groups to inspect the rows of the board with the helper
-  function. If any of the groups of rows return a truthy value, set
+  /*Create the groups to inspect the rows and diagonals of the board with the helper
+  function. If any of the groups return a truthy value, set
   the winner number to that value. */
   checkForRowAndDiagonalWin() {
     const startNums = [0, 1, 2, 3];

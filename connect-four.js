@@ -56,7 +56,6 @@ const handlePlayerMove = (index, invalidMove) => {
 /*Handle the UI information on every turn.*/
 const updateUI = (index) => {
   let invalidMove = false;
-  game.checkForWinConditions();
   checkAllSquares();
   index === undefined || game.winnerNumber !== 0
     ? revealBoard()
