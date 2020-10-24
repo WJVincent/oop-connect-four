@@ -1,4 +1,6 @@
 import Game from "./game.js";
+import Deserializer from "./deserializer.js";
+import Serializer from "./serializer.js";
 
 let game = undefined;
 const gameBoard = document.getElementById("board-holder");
@@ -8,11 +10,11 @@ const textArea = document.getElementById("game-name");
 /*Check the values for every location on the board. If there is a player value
 in that location put the corresponding token into that location. */
 const checkAllSquares = () => {
-  for (let row = 0; row < 6; row++) {
-    for (let col = 0; col < 7; col++) {
-      let selectSquare = document.getElementById(`square-${row}-${col}`);
+  game.columns.forEach((column, i) => {
+    column.tokenArr.forEach((row, j) => {
+      let selectSquare = document.getElementById(`square-${j}-${i}`);
       selectSquare.innerHTML = "";
-      let checkSquare = game.getTokenAt(col, row);
+      let checkSquare = game.getTokenAt(i, j);
 
       if (checkSquare === 1) {
         let tempDiv = document.createElement("div");
@@ -23,8 +25,8 @@ const checkAllSquares = () => {
         tempDiv.classList.add("token", "black");
         selectSquare.appendChild(tempDiv);
       }
-    }
-  }
+    });
+  });
 };
 
 /*If a game has been started reveal the board and handle displaying the text
