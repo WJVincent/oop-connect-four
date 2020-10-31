@@ -6,7 +6,7 @@ export default class Board {
   makeBoard(obj) {
     obj.columns.forEach((column, i) => {
       column.tokenArr.forEach((row, j) => {
-        this.board[`square-${i}-${j}`] = null;
+        this.board[`square-${j}-${i}`] = null;
       });
     });
   }

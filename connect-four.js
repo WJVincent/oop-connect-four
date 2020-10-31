@@ -7,6 +7,7 @@ const clickTargets = document.getElementById("click-targets");
 const textArea = document.getElementById("game-name");
 let squaresObj = undefined;
 let game = undefined;
+let gameStarted = false;
 
 let columnObj = {
   0: 5,
@@ -15,22 +16,24 @@ let columnObj = {
   3: 5,
   4: 5,
   5: 5,
-  6: 5
+  6: 5,
 };
 
 const checkAllSquares = () => {
-  const gameBoard = game.board;
-  for (let key in gameBoard) {
-    if (gameBoard[key] !== null) {
+  for (let key in game.board) {
+    if (game.board[key] !== null) {
       let square = document.getElementById(key);
-      if (gameBoard[key] === 1) {
+      if (game.board[key] === 1) {
+        console.log("hello");
         let tokenDiv = document.createElement("div");
         tokenDiv.classList.add("token", "red");
         square.appendChild(tokenDiv);
-      } else if (gameBoard[key] === 2) {
+        break;
+      } else if (game.board[key] === 2) {
         let tokenDiv = document.createElement("div");
         tokenDiv.classList.add("token", "black");
         square.appendChild(tokenDiv);
+        break;
       }
     }
   }
@@ -65,13 +68,15 @@ const displayWinOrMove = (index, invalidMove) => {
       handlePlayerMove(index, invalidMove));
 };
 
-const updateUI = index => {
+const updateUI = (index) => {
   let invalidMove = false;
-  checkAllSquares();
+  if (gameStarted) {
+    checkAllSquares();
+  }
   displayWinOrMove(index, invalidMove);
 };
 
-const findColumnIndex = rowIndex => {
+const findColumnIndex = (rowIndex) => {
   let index = columnObj[rowIndex];
   columnObj[rowIndex] -= 1;
   console.log(columnObj[rowIndex]);
@@ -100,14 +105,14 @@ window.addEventListener("DOMContentLoaded", () => {
     updateUI();
   });
 
-  clickTargets.addEventListener("click", event => {
+  clickTargets.addEventListener("click", (event) => {
     if (game.winnerNumber !== 0) return;
 
     let element = event.target.id;
     if (!element.startsWith("column-")) return;
     let rowIndex = Number.parseInt(element[element.length - 1]);
     let columnIndex = findColumnIndex(rowIndex);
-    console.log(rowIndex, columnIndex);
+
     game.takePlayerTurn(rowIndex, columnIndex);
     updateUI(rowIndex);
   });
