@@ -1,3 +1,4 @@
+import Board from "./board.js";
 import Column from "./column.js";
 import ColumnWinInspector from "./columnWin.js";
 import RowWinInspector from "./rowWin.js";
@@ -10,10 +11,9 @@ export default class Game {
     this.currentPlayer = 1;
     this.winnerNumber = 0;
     this.columns = Array.from(new Array(7), () => new Column());
+    this.board = new Board();
   }
 
-  /*Check the value of winner number and return an template string based on the value
-  of winner number */
   getName() {
     switch (this.winnerNumber) {
       case 0:
@@ -27,31 +27,42 @@ export default class Game {
     }
   }
 
-  /*If the instance of column in the columns array is not full, then call the add
-  method on that column instance array. Switch the value of current player. */
+  changePlayer() {
+    this.currentPlayer === 1
+      ? (this.currentPlayer = 2)
+      : (this.currentPlayer = 1);
+  }
+
+  playInGameBoard(columnIndex, rowIndex) {
+    this.board[`square-${rowIndex}-${columnIndex}`] = this.currentPlayer;
+  }
+
   playInColumn(columnIndex) {
+    this.columns[columnIndex].add(this.currentPlayer);
+  }
+
+  isColumnFull(index) {
+    return this.columns[index].isFull();
+  }
+
+  takePlayerTurn(columnIndex, rowIndex) {
     if (!this.columns[columnIndex].isFull()) {
-      this.columns[columnIndex].add(this.currentPlayer);
-      this.currentPlayer === 1
-        ? (this.currentPlayer = 2)
-        : (this.currentPlayer = 1);
+      this.playInColumn(columnIndex);
+      console.log("Should be 0:", columnIndex, "Should be 5", rowIndex);
+      this.playInGameBoard(columnIndex, rowIndex);
+      this.changePlayer();
     }
     this.checkForWinConditions();
   }
 
-  /*Check each of the column instances in the columns array, to see if there are
-  any more playable locations. */
   checkForTie() {
-    if (this.columns.every((column) => column.isFull())) {
+    if (this.columns.every(column => column.isFull())) {
       return (this.winnerNumber = 3);
     }
   }
 
-  /*For each of the column instances make a win inspector and run the inspect
-  method on the new instance. If there is a value returned from that inspect
-  method set the winner number to that value.*/
   checkForColumnWin() {
-    this.columns.forEach((ele) => {
+    this.columns.forEach(ele => {
       let checkedArray = new ColumnWinInspector(ele.tokenArr);
       if (checkedArray.inspect()) {
         this.winnerNumber = checkedArray.inspect();
@@ -59,19 +70,14 @@ export default class Game {
     });
   }
 
-  /*Helper function to create a new instance of a win inspector for
-  a set group of columns*/
   createGroup(start, end, className) {
     let group = this.columns.slice(start, end);
     return new className(group);
   }
 
-  /*Create the groups to inspect the rows and diagonals of the board with the helper
-  function. If any of the groups return a truthy value, set
-  the winner number to that value. */
   checkForRowAndDiagonalWin() {
     const startNums = [0, 1, 2, 3];
-    startNums.forEach((ele) => {
+    startNums.forEach(ele => {
       let rowGroup = this.createGroup(ele, ele + 4, RowWinInspector);
       let diagonalGroup = this.createGroup(ele, ele + 4, DiagonalWinInspector);
       if (rowGroup.inspect()) {
@@ -82,21 +88,9 @@ export default class Game {
     });
   }
 
-  /*Run all methods that check for win/tie conditions */
   checkForWinConditions() {
     this.checkForTie();
     this.checkForColumnWin();
     this.checkForRowAndDiagonalWin();
-  }
-
-  /*Check the value of the column instance, at a specific index of that instances
-  array */
-  getTokenAt(colIndex, rowIndex) {
-    return this.columns[colIndex].getIndexAt(rowIndex);
-  }
-
-  /*Check if the specific column instance is full */
-  isColumnFull(index) {
-    return this.columns[index].isFull();
   }
 }

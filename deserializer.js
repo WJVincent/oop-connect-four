@@ -8,12 +8,12 @@ export default class Deserializer {
 
   deserialize() {
     let jsonString = localStorage.getItem("gameState");
-    let object = JSON.parse(jsonString);
-    if (object !== null) {
-      this.tokenArray = object[0];
-      this.playerNames = object[1];
-      this.currentPlayer = object[2];
-      this.winnerNumber = object[3];
+    let storage = JSON.parse(jsonString);
+    if (storage !== null) {
+      this.tokenArray = storage[0];
+      this.playerNames = storage[1];
+      this.currentPlayer = storage[2];
+      this.winnerNumber = storage[3];
     }
   }
 }

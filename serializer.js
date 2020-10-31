@@ -13,13 +13,13 @@ export default class Serializer {
       }
       tokenArray.push(column);
     }
-    playerNames[0] = this.game.player1Name;
-    playerNames[1] = this.game.player2Name;
+    playerNames[0] = this.game.player1;
+    playerNames[1] = this.game.player2;
     let jsonString = JSON.stringify([
       tokenArray,
       playerNames,
       this.game.currentPlayer,
-      this.game.winnerNumber,
+      this.game.winnerNumber
     ]);
     localStorage.setItem("gameState", jsonString);
   }

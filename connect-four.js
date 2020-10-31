@@ -2,35 +2,55 @@ import Game from "./game.js";
 import Deserializer from "./deserializer.js";
 import Serializer from "./serializer.js";
 
-let game = undefined;
 const gameBoard = document.getElementById("board-holder");
-const playArea = document.getElementById("click-targets");
+const clickTargets = document.getElementById("click-targets");
 const textArea = document.getElementById("game-name");
+let squaresObj = undefined;
+let game = undefined;
 
-/*Check the values for every location on the board. If there is a player value
-in that location put the corresponding token into that location. */
-const checkAllSquares = () => {
-  game.columns.forEach((column, i) => {
-    column.tokenArr.forEach((row, j) => {
-      let selectSquare = document.getElementById(`square-${j}-${i}`);
-      selectSquare.innerHTML = "";
-      let checkSquare = game.getTokenAt(i, j);
-
-      if (checkSquare === 1) {
-        let tempDiv = document.createElement("div");
-        tempDiv.classList.add("token", "red");
-        selectSquare.appendChild(tempDiv);
-      } else if (checkSquare === 2) {
-        let tempDiv = document.createElement("div");
-        tempDiv.classList.add("token", "black");
-        selectSquare.appendChild(tempDiv);
-      }
-    });
-  });
+let columnObj = {
+  0: 5,
+  1: 5,
+  2: 5,
+  3: 5,
+  4: 5,
+  5: 5,
+  6: 5
 };
 
-/*If a game has been started reveal the board and handle displaying the text
-for who is playing and if someone has won.*/
+const checkAllSquares = () => {
+  const gameBoard = game.board;
+  for (let key in gameBoard) {
+    if (gameBoard[key] !== null) {
+      let square = document.getElementById(key);
+      if (gameBoard[key] === 1) {
+        let tokenDiv = document.createElement("div");
+        tokenDiv.classList.add("token", "red");
+        square.appendChild(tokenDiv);
+      } else if (gameBoard[key] === 2) {
+        let tokenDiv = document.createElement("div");
+        tokenDiv.classList.add("token", "black");
+        square.appendChild(tokenDiv);
+      }
+    }
+  }
+};
+
+const changePlayerColor = () => {
+  let currentPlayer = game.currentPlayer;
+  currentPlayer === 1
+    ? (clickTargets.classList.remove("black"),
+      clickTargets.classList.add("red"))
+    : (clickTargets.classList.remove("red"),
+      clickTargets.classList.add("black"));
+};
+
+const handlePlayerMove = (index, invalidMove) => {
+  !invalidMove
+    ? changePlayerColor()
+    : document.getElementById(`column-${index}`).classList.add("full");
+};
+
 const revealBoard = () => {
   game === undefined
     ? gameBoard.classList.add("is-invisible")
@@ -38,41 +58,31 @@ const revealBoard = () => {
       (textArea.innerHTML = `<h1>${game.getName()}</h1>`));
 };
 
-/*Set the token color to correspond to the current player */
-const changePlayerColor = () => {
-  let currentPlayer = game.currentPlayer;
-  currentPlayer === 1
-    ? (playArea.classList.remove("black"), playArea.classList.add("red"))
-    : (playArea.classList.remove("red"), playArea.classList.add("black"));
-};
-
-/*Handle switching turns if the move was valid. If the column is full add a visual cue
-to the board that lets the player clearly see that no more moves can be made on that
-column. */
-const handlePlayerMove = (index, invalidMove) => {
-  !invalidMove
-    ? changePlayerColor()
-    : document.getElementById(`column-${index}`).classList.add("full");
-};
-
-/*Handle the UI information on every turn.*/
-const updateUI = (index) => {
-  let invalidMove = false;
-  checkAllSquares();
+const displayWinOrMove = (index, invalidMove) => {
   index === undefined || game.winnerNumber !== 0
-    ? revealBoard()
+    ? revealBoard(index, invalidMove)
     : ((invalidMove = game.isColumnFull(index)),
       handlePlayerMove(index, invalidMove));
 };
 
-/*Add event listener to start the game when the html document has loaded */
+const updateUI = index => {
+  let invalidMove = false;
+  checkAllSquares();
+  displayWinOrMove(index, invalidMove);
+};
+
+const findColumnIndex = rowIndex => {
+  let index = columnObj[rowIndex];
+  columnObj[rowIndex] -= 1;
+  console.log(columnObj[rowIndex]);
+  return index;
+};
+
 window.addEventListener("DOMContentLoaded", () => {
   const P1 = document.getElementById("player-1-name");
   const P2 = document.getElementById("player-2-name");
   const newGameButton = document.getElementById("new-game");
 
-  /*Only allow the new game button to be pressed if there are values in
-  both the player 1 and player 2 name fields are filled out */
   const disableNewGameButton = () => {
     newGameButton.disabled = P1.value === "" && P2.value === "" ? true : false;
   };
@@ -80,26 +90,25 @@ window.addEventListener("DOMContentLoaded", () => {
   P1.addEventListener("keyup", () => disableNewGameButton());
   P2.addEventListener("keyup", () => disableNewGameButton());
 
-  /*When the new game button is clicked created a game instance, reset the values
-  of the player 1 and player 2 input fields and disable the new game button */
   newGameButton.addEventListener("click", () => {
     game = new Game(P1.value, P2.value);
+    console.log(game.board);
     P1.value = "";
     P2.value = "";
     newGameButton.disabled = true;
-
+    game.board.makeBoard(game);
     updateUI();
   });
 
-  /*Listen for clicks on the area of the screen that takes the users token input */
-  playArea.addEventListener("click", (event) => {
-    if (game.winnerNumber !== 0) return; //If a win condition is true, shut this down.
+  clickTargets.addEventListener("click", event => {
+    if (game.winnerNumber !== 0) return;
 
     let element = event.target.id;
     if (!element.startsWith("column-")) return;
-    let columnIndex = Number.parseInt(element[element.length - 1]);
-
-    game.playInColumn(columnIndex);
-    updateUI(columnIndex);
+    let rowIndex = Number.parseInt(element[element.length - 1]);
+    let columnIndex = findColumnIndex(rowIndex);
+    console.log(rowIndex, columnIndex);
+    game.takePlayerTurn(rowIndex, columnIndex);
+    updateUI(rowIndex);
   });
 });
